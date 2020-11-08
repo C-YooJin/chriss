@@ -10,7 +10,6 @@ connection = mysql.connector.connect(host='192.168.0.101',
                                          user='root',
                                          password='Covid19!',
                                          auth_plugin='mysql_native_password')
-
 # 리얼
 class MyApp(QWidget):
     # 생성자
