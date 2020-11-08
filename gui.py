@@ -29,7 +29,7 @@ class MyApp(QWidget):
         # input EndDate
         self.lb2 = QLabel(self)
         self.lb2.move(10, 80)
-        self.lb2.setText("시작날짜(yyyyMMdd)")
+        self.lb2.setText("종료날짜(yyyyMMdd)")
         self.et2 = QLineEdit(self)
         self.et2.move(150, 80)
 
