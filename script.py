@@ -13,8 +13,8 @@ def Excel_Out(connection, startDt, endDt):
             print(type(startDt))
             cursor.execute(("select * from covid.epidemiology where input_date between (%s) and (%s) order by input_date;"),(startDt,endDt))
             record = cursor.fetchall()
-            print("You're connected to database: ", record)
-            print(type(record))
+            #print("You're connected to database: ", record)
+            #print(type(record))
             my_map = {"InputDate": "입력일자", "Investigator_date": "조사일자", "Investigator_phone": "핸드폰번호",
                       "Investigator_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
                       "Subject_job": "직업", "InspectionCaseNm": "검사케이스", "Doctor_type1_nm": "사례분류",
@@ -42,9 +42,10 @@ def Excel_Out(connection, startDt, endDt):
                       "Investigator_name": "조사자 성명", "Investigator_phone": "조사자 연락처", "Investigator_root": "인지경로(기관)",
                       "SpecimenDocMessage ": "담당의사소견", "SpecimenDocName": "담당역학조사관"}
 
-            
-            print(startDt, endDt)
-            # list에 header붙여서 excel로 내보내면 될
+            df = pd.DataFrame(record).rename(columns=my_map)
+
+            print(df)
+            df.to_excel('result.xlsx')
 
 
         else:
