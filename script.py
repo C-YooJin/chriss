@@ -11,7 +11,7 @@ def Excel_Out(connection, startDt, endDt):
 
             query_total = ("SELECT input_date, Investigator_date, Subject_phone, Subject_name,"
                      "Subject_gender, Subject_reg_number, Subject_job, "
-                     "InspectionCaseNm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
+                     "specimen_case_nm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
                      "Suspicion_category_gangnam, Subject_address, Travel_status, Travel_leave_date, "
                      "Travel_visit1_country, Travel_visit1_city, Travel_visit1_start_date, Travel_visit1_end_date, "
                      "Travel_transit_status, Travel_transit_country, Travel_transit_city, Travel_trasit_start_date, "
@@ -32,7 +32,7 @@ def Excel_Out(connection, startDt, endDt):
             #print(type(record))
             my_map_total = {"input_date": "입력일자", "Investigator_date": "조사일자", "Subject_phone": "핸드폰번호",
                       "Subject_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
-                      "Subject_job": "직업", "InspectionCaseNm": "검사케이스", "Doctor_type1_nm": "사례분류",
+                      "Subject_job": "직업", "specimen_case_nm": "검사케이스", "Doctor_type1_nm": "사례분류",
                       "Suspicion": "의심경로구분", "Suspicion_category_overseas": "의심경로대구분",
                       "Suspicion_category_gangnam": "의심경로소구분",
                       "Subject_address": "주소", "Travel_status": "해외방문여부", "Travel_leave_date": "출국일시",
@@ -61,7 +61,7 @@ def Excel_Out(connection, startDt, endDt):
 
             query_report = ("SELECT input_date, Investigator_date, Subject_phone, Subject_name, "
                            "Subject_gender, Subject_reg_number, Subject_job, "
-                           "InspectionCaseNm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
+                           "specimen_case_nm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
                            "Suspicion_category_gangnam, Subject_address "
                            "FROM covid.epidemiology "
                            "WHERE input_date between (%s) and (%s) order by input_date; ")
@@ -71,7 +71,7 @@ def Excel_Out(connection, startDt, endDt):
 
             my_map_report = {"input_date": "입력일자", "Investigator_date": "조사일자", "Subject_phone": "핸드폰번호",
                              "Subject_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
-                             "Subject_job": "직업", "InspectionCaseNm": "검사케이스", "Doctor_type1_nm": "사례분류",
+                             "Subject_job": "직업", "specimen_case_nm": "검사케이스", "Doctor_type1_nm": "사례분류",
                              "Suspicion": "의심경로구분", "Suspicion_category_overseas": "의심경로대구분",
                              "Suspicion_category_gangnam": "의심경로소구분", "Subject_address": "주소"}
 
@@ -97,3 +97,11 @@ def Excel_Out(connection, startDt, endDt):
     except Error as e:
         print("Error while connecting to MySQL", e)
         exit()
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+            exit()
+        else:
+            exit()

@@ -50,6 +50,8 @@ class MyApp(QWidget):
         # 엑셀 내보내기 스크립트
         script.Excel_Out(connection, self.et1.text(), self.et2.text())
 
+
+
 # Main 시작
 if __name__ == '__main__':
     app = QApplication(sys.argv)
