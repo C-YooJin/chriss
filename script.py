@@ -1,7 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
 import pandas as pd
-import numpy as np
 
 def Excel_Out(connection, startDt, endDt):
     try:
@@ -10,7 +9,7 @@ def Excel_Out(connection, startDt, endDt):
             print("Connected to MySQL Server version ", db_Info)
             cursor = connection.cursor(dictionary=True)
 
-            query_total = ("SELECT InputDate, Investigator_date, Investigator_phone, Investigator_name,"
+            query_total = ("SELECT input_date, Investigator_date, Subject_phone, Subject_name,"
                      "Subject_gender, Subject_reg_number, Subject_job, "
                      "InspectionCaseNm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
                      "Suspicion_category_gangnam, Subject_address, Travel_status, Travel_leave_date, "
@@ -31,8 +30,8 @@ def Excel_Out(connection, startDt, endDt):
 
             #print("You're connected to database: ", record)
             #print(type(record))
-            my_map_total = {"InputDate": "입력일자", "Investigator_date": "조사일자", "Investigator_phone": "핸드폰번호",
-                      "Investigator_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
+            my_map_total = {"input_date": "입력일자", "Investigator_date": "조사일자", "Subject_phone": "핸드폰번호",
+                      "Subject_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
                       "Subject_job": "직업", "InspectionCaseNm": "검사케이스", "Doctor_type1_nm": "사례분류",
                       "Suspicion": "의심경로구분", "Suspicion_category_overseas": "의심경로대구분",
                       "Suspicion_category_gangnam": "의심경로소구분",
@@ -60,7 +59,7 @@ def Excel_Out(connection, startDt, endDt):
 
             df_total = pd.DataFrame(record_total).rename(columns=my_map_total)
 
-            query_report = ("SELECT InputDate, Investigator_date, Investigator_phone, Investigator_name,"
+            query_report = ("SELECT input_date, Investigator_date, Subject_phone, Subject_name, "
                            "Subject_gender, Subject_reg_number, Subject_job, "
                            "InspectionCaseNm, Doctor_type1_nm, Suspicion, Suspicion_category_overseas, "
                            "Suspicion_category_gangnam, Subject_address "
@@ -70,35 +69,31 @@ def Excel_Out(connection, startDt, endDt):
             cursor.execute(query_report, (startDt, endDt))
             record_report = cursor.fetchall()
 
-            my_map_report = {"InputDate": "입력일자", "Investigator_date": "조사일자", "Investigator_phone": "핸드폰번호",
-                             "Investigator_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
+            my_map_report = {"input_date": "입력일자", "Investigator_date": "조사일자", "Subject_phone": "핸드폰번호",
+                             "Subject_name": "이름", "Subject_gender": "성별", "Subject_reg_number": "생년월일",
                              "Subject_job": "직업", "InspectionCaseNm": "검사케이스", "Doctor_type1_nm": "사례분류",
                              "Suspicion": "의심경로구분", "Suspicion_category_overseas": "의심경로대구분",
-                             "Suspicion_category_gangnam": "의심경로소구분",
-                             "Subject_address": "주소"}
+                             "Suspicion_category_gangnam": "의심경로소구분", "Subject_address": "주소"}
 
             df_report = pd.DataFrame(record_report).rename(columns=my_map_report)
 
 
             # Create a Pandas Excel writer using XlsxWriter as the engine
-            writer = pd.ExcelWriter('{}to{}_covid.xlsx'.format(startDt, endDt), engine='xlsxwriter')
+            writer = pd.ExcelWriter('{}_to_{}_covid.xlsx'.format(startDt, endDt))
 
             # Write each dataframe to a different worksheet.
-            df_total.to_excel(writer, sheet_name='전체 데이터')
-            df_report.to_excel(writer, sheet_name='보고용 데이터')
+            df_total.to_excel(writer, sheet_name='전체 데이터', index=False)
+            df_report.to_excel(writer, sheet_name='보고용 데이터', index=False)
 
             # Close the Pandas Excel writer and output the Excel file.
             writer.save()
+            #root.destroy()
 
+
+            print("Save Success.")
         else:
             print("if connection fail")
-
+            exit()
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        else:
-            print("응아니야")
+        exit()
