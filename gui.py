@@ -52,6 +52,7 @@ class MyApp(QWidget):
 
 
 
+
 # Main 시작
 if __name__ == '__main__':
     app = QApplication(sys.argv)
